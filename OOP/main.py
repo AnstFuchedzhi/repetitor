@@ -58,10 +58,13 @@ class Category:
         return f'Общая стоимость товаров категории {self.name} - {total}'
            
     def cheapest(self):  #возвращает самый дешевый товар из категории
+        if not self.__products :
+            return None
         min_product = self.__products[0]
         for product in self.__products:
             if product.price < min_product.price:
                 min_product = product
+
         return f'Самый дешевый товар из каталога {self.name}: {min_product.name} - стоимостью {min_product.price}'
 
 elecrtonic = Category('Электроника', 'Все виды электроники')
