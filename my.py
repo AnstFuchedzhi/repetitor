@@ -1,17 +1,25 @@
 class Bank_Account:
 
-    def __init__(self, owner, balance):
-        self.owner = owner
-        self.__balance = balance
+    def __init__(self, balance):
+        self.__balance = balance    
+        
 
-    def deposite(self, amount):
-        if amount > 0:
-            self.__balance += amount
-            print(f'Зачислено: {amount}')
-
-    def get_balance(self):
+    @property
+    def balance(self):
         print(self.__balance)
 
-person = Bank_Account('P', 1000)
-person.deposite(500)
-person.get_balance()
+    @balance.setter
+    def balance(self, new_balance):
+        if not isinstance(new_balance, (int, float)):
+            print('Ошибка Валидации')
+            return
+        if new_balance < 0:
+            print('Баланс меньше нуля')
+            return 
+        self.__balance = new_balance
+        return 'Баланс обновлен'
+
+person = Bank_Account(1000)
+person.balance
+person.balance = 2000
+person.balance

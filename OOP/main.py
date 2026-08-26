@@ -7,6 +7,21 @@ class Product:
         self.stock = stock
         self.category = category
 
+    @property
+    def price_s(self):
+        return self.price
+
+    @price_s.setter
+    def price_s(self, value):
+        if not isinstance(value, (int, float)):
+            raise ValueError('Ошибка Валидации')
+        if value < 0:
+            raise ValueError('Ошибка Валидации')
+        self.price = value
+        return 'Успешно'
+
+
+
     def get_info(self):
         category_name = self.category.name if self.category else 'без категории'
         return f'Товар: {self.name}, Цена: {self.price}, Категории {category_name}'
@@ -82,3 +97,7 @@ print(elecrtonic.remove_product(phone))
 
 print(elecrtonic.get_total_value())
 print(elecrtonic.cheapest())
+
+print(phone.price_s)
+phone.price_s = 20000
+print(phone.price_s)
