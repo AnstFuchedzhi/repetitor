@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Product:
 
-    def __init__(self, name, price, stock, category = None, discount = 0 ):
+    def __init__(self, name, price, stock, category = None, discount = 10 ):
 
         self.name= name
         self.price = price
@@ -25,6 +25,7 @@ class Product:
 
     @property
     def stock(self): #возвращает кол-во товаров на складе
+        print(f'Кол-во товара {self.name} на складе: ')
         return self.__stock
 
 
@@ -40,8 +41,11 @@ class Product:
 
     @property
     def price_s(self):
-        return f'Цена на товар {self.name} - {self.price}'
-    
+        if self.__discount > 0:
+            calculation = (self.price * self.__discount)/ 100
+            price_with_discount = self.price - calculation
+            return f'Цена на товар {self.name} со скидкой - {price_with_discount}'
+        return f'Скидки нет, цена на товар {self.name} - {self.price}'
 
     @price_s.setter
     def price_s(self, value):
@@ -60,7 +64,7 @@ class Product:
     def reduce_stock(self, count=1):
         if count > self.__stock:
             return f'Не можем выдать столько. На складе {self.__stock} товаров'
-        self.stock_s -= count
+        self.stock -= count
 
     @property
     def is_in_stoke(self):
@@ -69,12 +73,14 @@ class Product:
         return False
 
     def increase(self, count=1):
-        self.stock_s += count
+        self.stock += count
 
     def apply_discount(self, percent): #уменьшает цену на указанный процент
-        discount = self.price/percent
-        result = self.price - discount
-        return f'На товаре: {self.name} скидка {percent}%, теперь цена на товар {result}'
+        if percent > 0 and percent < 100:
+            discount = self.price/percent
+            result = self.price - discount
+            return f'На товаре: {self.name} скидка {percent}%, теперь цена на товар {result}'
+        raise ValueError('Ошибка Валидации')
 
     def remove_discount(self):
         self.__discount = 0
@@ -130,7 +136,6 @@ class Category: #😍😍😍
 
     @property
     def create(self):
-        self.__created_at_time = datetime.now()
         return f'Дата и время создания категории {self.name} - {self.__created_at_time.strftime("%Y-%m-%d %H:%M:%S")}'
 
     def get_product_count(self):
@@ -138,41 +143,22 @@ class Category: #😍😍😍
         return f'В категории {self.name} всего {count_product} позиции'
 
     def get_avg_price(self):
-        total = 0
-        count_len = len(self.__products)
-        for product in self.__products:
-            if count_len == 0:
-                return 0
-        total += product.price
-        average = total // count_len
-        return f'Средняя цена товаров в категории {self.name}: {average}'
+        total = sum(product.price for product in self.__products)
+        count = len(self.__products)
+        avg = total//count
+        return f'Средняя цена товаров в категории {self.name}: {avg}'
 
 
 elecrtonic = Category('Электроника', 'Все виды электроники')
 laptop = Product('Ноутбук', 63000, 10, elecrtonic)
 phone = Product('Телефон', 55000, 12, elecrtonic )
 microwave = Product('Микроволновка', 7000, 13, elecrtonic)
-print(laptop.get_info())
-print(laptop.apply_discount(10))
-print(laptop.get_total_value)
+
+print(laptop.stock)
+print(phone.stock)
+print(microwave.stock)
 elecrtonic.add_product(laptop)
 elecrtonic.add_product(phone)
 elecrtonic.add_product(microwave)
-print(elecrtonic.remove_product(phone))
-print(elecrtonic.get_total_value)
-print(elecrtonic.cheapest())
-print(phone.price_s)
-phone.price_s = 20000
-print(phone.price_s)
-print(phone.stock)
-laptop.stock_s = 25
-print(laptop.stock_s)
-print(microwave.product_discount)
-microwave.product_discount = 5
-print(microwave.product_discount)
-print(microwave.remove_discount())
-print(laptop.is_in_stoke)
-
-print(elecrtonic.create)
-print(elecrtonic.get_product_count())
+print(elecrtonic.get_total_value())
 print(elecrtonic.get_avg_price())
