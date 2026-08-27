@@ -6,7 +6,7 @@ class Product:
     def __init__(self, name, price, stock, category = None, discount = 10 ):
 
         self.name= name
-        self.price = price
+        self._price = price
         self.__stock = stock
         self.category = category
         self.__discount = discount
@@ -42,10 +42,10 @@ class Product:
     @property
     def price_s(self):
         if self.__discount > 0:
-            calculation = (self.price * self.__discount)/ 100
-            price_with_discount = self.price - calculation
+            calculation = (self._price * self.__discount)/ 100
+            price_with_discount = self._price - calculation
             return f'Цена на товар {self.name} со скидкой - {price_with_discount}'
-        return f'Скидки нет, цена на товар {self.name} - {self.price}'
+        return f'Скидки нет, цена на товар {self.name} - {self._price}'
 
     @price_s.setter
     def price_s(self, value):
@@ -53,13 +53,13 @@ class Product:
             raise ValueError('Ошибка Валидации')
         if value < 0:
             raise ValueError('Ошибка Валидации')
-        self.price = value
+        self._price = value
         print(f'Цена на товар {self.name} успешно заменено на {value}')
 
 
     def get_info(self):
         category_name = self.category.name if self.category else 'без категории'
-        return f'Товар: {self.name}, Цена: {self.price}, Категории {category_name}'
+        return f'Товар: {self.name}, Цена: {self._price}, Категории {category_name}'
 
     def reduce_stock(self, count=1):
         if count > self.__stock:
@@ -77,18 +77,18 @@ class Product:
 
     def apply_discount(self, percent): #уменьшает цену на указанный процент
         if percent > 0 and percent < 100:
-            discount = self.price/percent
-            result = self.price - discount
+            discount = self._price/percent
+            result = self._price - discount
             return f'На товаре: {self.name} скидка {percent}%, теперь цена на товар {result}'
         raise ValueError('Ошибка Валидации')
 
     def remove_discount(self):
         self.__discount = 0
-        return f'Скидка с товара {self.name} удалена, теперь цена товара {self.price}'
+        return f'Скидка с товара {self.name} удалена, теперь цена товара {self._price}'
     
     @property
     def get_total_value(self): #возвращает общую стоимость товаров на складе
-        all_count = self.price * self.__stock
+        all_count = self._price * self.__stock
         return f'Общая стоимость товаров {self.name} - {all_count}'
 
 
@@ -122,7 +122,7 @@ class Category: #😍😍😍
     def get_total_value(self):  #возвр общую стоимость товаров из категории
         total = 0
         for product in self.__products:
-            total += product.price * product.stock
+            total += product._price * product.stock
         return f'Общая стоимость товаров категории {self.name} - {total}'
            
     def cheapest(self):  #возвращает самый дешевый товар из категории
@@ -130,9 +130,9 @@ class Category: #😍😍😍
             return None
         min_product = self.__products[0]
         for product in self.__products:
-            if product.price < min_product.price:
+            if product._price < min_product._price:
                 min_product = product
-        return f'Самый дешевый товар из каталога {self.name}: {min_product.name} - стоимостью {min_product.price}'
+        return f'Самый дешевый товар из каталога {self.name}: {min_product.name} - стоимостью {min_product._price}'
 
     @property
     def create(self):
@@ -143,7 +143,7 @@ class Category: #😍😍😍
         return f'В категории {self.name} всего {count_product} позиции'
 
     def get_avg_price(self):
-        total = sum(product.price for product in self.__products)
+        total = sum(product._price for product in self.__products)
         count = len(self.__products)
         avg = total//count
         return f'Средняя цена товаров в категории {self.name}: {avg}'
@@ -162,3 +162,5 @@ elecrtonic.add_product(phone)
 elecrtonic.add_product(microwave)
 print(elecrtonic.get_total_value())
 print(elecrtonic.get_avg_price())
+print(phone.apply_discount(10))
+print(laptop._price)
