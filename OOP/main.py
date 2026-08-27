@@ -91,7 +91,6 @@ class Product:
         all_count = self._price * self.__stock
         return f'Общая стоимость товаров {self.name} - {all_count}'
 
-
     
 
 class Category: #😍😍😍

@@ -1,25 +1,37 @@
-class Bank_Account:
+class Animal:
 
-    def __init__(self, balance):
-        self.__balance = balance    
-        
+    def __init__(self, age, name):
+        self.age = age
+        self.name = name
 
-    @property
-    def balance(self):
-        print(self.__balance)
+    def get_info(self):
+        return f' {self.age}, {self.name}'
 
-    @balance.setter
-    def balance(self, new_balance):
-        if not isinstance(new_balance, (int, float)):
-            print('Ошибка Валидации')
-            return
-        if new_balance < 0:
-            print('Баланс меньше нуля')
-            return 
-        self.__balance = new_balance
-        return 'Баланс обновлен'
+    def eat(self):
+        return f'Животное {self.name} ест'
 
-person = Bank_Account(1000)
-person.balance
-person.balance = 2000
-person.balance
+    def sleep(self):
+        return f'Животное {self.name} спит'
+
+
+class Dog(Animal):
+
+    def __init__(self, age, name, breed):
+        super().__init__(age, name)
+        self.breed = breed
+
+    def sound(self):
+        return f'Животное {self.name} издает звук гав'
+
+    def get_info(self):
+            return f' {self.age} {self.name} {self.breed}'
+
+
+class Cat(Animal):
+    def sound(self):
+        return f'Животное {self.name} издает звук мяу'
+
+
+dog = Dog(3, 'H', 'pekines')
+print(dog.get_info())
+    
