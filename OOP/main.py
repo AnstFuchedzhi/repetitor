@@ -75,12 +75,6 @@ class Product:
     def increase(self, count=1):
         self.stock += count
 
-    def apply_discount(self, percent): #уменьшает цену на указанный процент
-        if percent > 0 and percent < 100:
-            discount = self._price/percent
-            result = self._price - discount
-            return f'На товаре: {self.name} скидка {percent}%, теперь цена на товар {result}'
-        raise ValueError('Ошибка Валидации')
 
     def remove_discount(self):
         self.__discount = 0
@@ -161,5 +155,5 @@ elecrtonic.add_product(phone)
 elecrtonic.add_product(microwave)
 print(elecrtonic.get_total_value())
 print(elecrtonic.get_avg_price())
-print(phone.apply_discount(10))
 print(laptop._price)
+print(laptop.get_info())
