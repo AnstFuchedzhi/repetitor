@@ -95,6 +95,8 @@ class Product:
 
     def __gt__(self, value):
         return self._price > value._price
+
+
     
 
 class Category: #😍😍😍
@@ -151,6 +153,8 @@ class Category: #😍😍😍
         avg = total//count
         return f'Средняя цена товаров в категории {self.name}: {avg}'
 
+    
+
 class Cart: #😎😎😎
     def __init__(self):
         self.__items = []
@@ -161,6 +165,7 @@ class Cart: #😎😎😎
             if item['product'] == product:
                 item['quantity'] += quantity
                 self.__update_total()
+                return
         if product.stock >= quantity:
             product.reduce_stock(quantity)
             self.__items.append({'product': product, 'quantity': quantity })
@@ -174,7 +179,7 @@ class Cart: #😎😎😎
             quantity = item['quantity']
             if product.name == product_name:
                 self.__items.remove(item)
-                product.stock += quantity
+                product.increase()
                 self.__total -= product._price * quantity
                 return f'Товар {product.name} удален из корзины. Сумма товаров на складе: {self.__total}'
         return f'Товар не найден'
@@ -183,11 +188,11 @@ class Cart: #😎😎😎
         for item in self.__items:
             product = item['product']
             quantity = item['quantity']
-            product.stock += quantity
-            self.__total = 0.0
-            self.__items.clear()
-            return f'Корзина очищена'
-        return f'Ошибка'
+            product.increase(quantity)
+        self.__total = 0.0
+        self.__items.clear()
+        return f'Корзина очищена'
+        
 
     def get_total(self):
         total = float(self.__total)
@@ -218,6 +223,19 @@ class Cart: #😎😎😎
                 return True
         return False
 
+    def __str__(self):
+        if not self.__items:
+            return f'Корзина пустая'
+        lines = ['='*40]
+        for item in self.__items:
+            product = item['product']
+            sub_total = product._price * item['quantity']
+            lines.append(f'{product.name} в кол-ве: {item["quantity"]} = {sub_total}')
+        lines.append('='*40)
+        lines.append(f'Итоговая сумма: {self.__total}')
+        lines.append('='*40)
+        return '\n'.join(lines)
+
 
 
 cart = Cart()
@@ -225,6 +243,7 @@ elecrtonic = Category('Электроника', 'Все виды электро�
 laptop = Product('Ноутбук', 63000, 10, elecrtonic)
 phone = Product('Телефон', 55000, 12, elecrtonic )
 microwave = Product('Микроволновка', 7000, 13, elecrtonic)
+
 
 print(laptop==phone)
 print(microwave < laptop)
@@ -242,4 +261,4 @@ print(elecrtonic)
 print(len(cart))
 print(cart[0])
 print('Ноутбук' in cart)
-print(cart.get_total())
+print(cart)
