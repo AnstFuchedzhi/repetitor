@@ -11,7 +11,7 @@ class BookProduct(Product):
         self.__isbn = isbn
 
     def get_info(self):
-        return f'Автор: {self.author}, Страниц: {self.pages}, Издательство: {self.publish}, ISBN: {self.__isbn}'
+        return f'Автор: {self.author}, Страниц: {self.pages}, Издательство: {self.publish}, ISBN: {self.__isbn}, Категория: {category.name}'
 
     @property
     def book_isbn(self):
@@ -31,7 +31,7 @@ class BookProduct(Product):
 
 
 category = Category('books', 'very interesting book')
-book = book = BookProduct(
+book = BookProduct(
     name= 'Мастер и Маргарита',
     price= 2000,
     stock= 20,
@@ -48,6 +48,8 @@ print(book.get_info())
 print(book.book_isbn)
 book.book_isbn = '987-654-321-9876'
 print(book.book_isbn)
+
+print(category.discription)
 
 
 
