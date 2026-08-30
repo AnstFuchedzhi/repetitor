@@ -56,8 +56,10 @@ class Product:
         self._price = value
         print(f'Цена на товар {self.name} успешно заменено на {value}')
 
-
     def __repr__(self):
+        return self.name
+
+    def __str__(self):
         category_name = self.category.name if self.category else 'без категории'
         return f'Товар: {self.name}, Цена: {self._price}, Категории {category_name}'
 
@@ -86,7 +88,7 @@ class Product:
         return f'Общая стоимость товаров {self.name} - {all_count}'
 
     def __eq__(self, value):
-        return self._price == value._price
+        return self.name == value.name
 
     def __lt__(self, value):
         return self._price < value._price
@@ -155,10 +157,14 @@ class Cart: #😎😎😎
         self.__total = 0.0
 
     def add_items(self, product, quantity=1):
+        for item in self.__items:
+            if item['product'] == product:
+                item['quantity'] += quantity
+                self.__update_total()
         if product.stock >= quantity:
-            product.stock -= quantity
+            product.reduce_stock(quantity)
             self.__items.append({'product': product, 'quantity': quantity })
-            self.__total += product._price * quantity
+            self.__update_total()
             return f'Товар {product.name} добавлен в корзину. Сумма товаров в корзине: {self.__total}'
         return f'Недостаточное количество товара {product.name}'
 
@@ -183,7 +189,7 @@ class Cart: #😎😎😎
             return f'Корзина очищена'
         return f'Ошибка'
 
-    def __str__(self):
+    def get_total(self):
         total = float(self.__total)
         return f'Общая сумма товаров корзины: {total}'
 
@@ -196,15 +202,23 @@ class Cart: #😎😎😎
         for item in self.__items:
             product = item['product']
             quantity = item['quantity']
-            total += product.price * quantity
+            total += product._price * quantity
         self.__total = total
-        return total
+    
 
     def __len__(self):
         return len(self.__items)
 
     def __getitem__(self, key):
         return self.__items[key]
+
+    def __contains__(self, item):
+        for i in self.__items:
+            if i['product'].name == item:
+                return True
+        return False
+
+
 
 cart = Cart()
 elecrtonic = Category('Электроника', 'Все виды электроники')
@@ -216,16 +230,16 @@ print(laptop==phone)
 print(microwave < laptop)
 print(microwave > laptop)
 
+print(elecrtonic)
+
 elecrtonic.add_product(laptop)
 elecrtonic.add_product(phone)
 elecrtonic.add_product(microwave)
-print(elecrtonic.get_total_value())
-print(elecrtonic.get_avg_price())
 
-
-print(cart.add_items(laptop, 1))
-print(cart)
+print(cart.add_items(laptop, 2))
 print(cart.get_items())
 print(elecrtonic)
 print(len(cart))
 print(cart[0])
+print('Ноутбук' in cart)
+print(cart.get_total())
