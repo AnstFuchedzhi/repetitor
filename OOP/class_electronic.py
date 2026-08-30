@@ -1,16 +1,32 @@
-from main import Product
+class Money:
+    def __init__(self, amount):
+        self.amount = amount
 
-class ElectronicProduct(Product):
-    def __init__(self, name, price, stock, brand, garanty ):
-        super().__init__(name, price, stock)
+    def __add__(self, other):
+        if not isinstance(other, Money):
+            raise ValueError('Ошибка валидации')
+        result = self.amount + other.amount
+        return Money(result)
 
-        self.brand = brand
-        self.garanty = garanty
+    def __str__(self):
+        return f'{self.amount}'
 
-    def get_info(self):
-        return f'Товар: {self.name}, Цена: {self._price}, Бренд: {self.brand}, Гарантия: {self.garanty}'
+    def __eq__(self, value):
+        if not isinstance(value, Money):
+            raise ValueError('Ошибка валидации')
+        return self.amount == value.amount
+
+    def __lt__(self, value):
+        if not isinstance(value, Money):
+            raise ValueError('Ошибка валидации')
+        return self.amount < value.amount
+    
+
+am1 = Money(2000)
+am2 = Money(1000)
+
+print(am1 + am2)
+print(am1 == am2)
+print(am1 > am2)
 
 
-
-product = ElectronicProduct('pencil', 23000, 15, 'ZaraHome', 1)
-print(product.get_info())
