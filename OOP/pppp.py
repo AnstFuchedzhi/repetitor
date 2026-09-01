@@ -11,6 +11,4 @@ class Product:
     def get_discount_rate(cls):
         return cls.discount_rate
 
-Product.discount(10)
-print(Product.get_discount_rate())
         

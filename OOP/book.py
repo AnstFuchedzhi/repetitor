@@ -11,10 +11,13 @@ class Book:
         self.pages = pages
         Book.total_books += 1
 
+
+    """Возвращает общее количество книг."""
     @classmethod
-    def get_total_books(cls):  #возвращает общее кол-во книг
+    def get_total_books(cls):  
         return cls.total_books
 
+    """Собирает книгу из словаря."""
     @classmethod
     def from_dict(cls, data):
         return cls(
@@ -24,8 +27,11 @@ class Book:
             pages = data.get('pages')
         )
 
+    """Собирает книгу из строки"""
     @classmethod
     def from_csv(cls, csv_string):
+        if not csv_string:
+            return f'Строка пустая'
         csv_file = StringIO(csv_string)
         reader = csv.reader(csv_file)
         lst = next(reader)
@@ -34,39 +40,40 @@ class Book:
             author = lst[1],
             years = lst[2],
             pages = lst[3]
-        )
-        
+            )
+
+    """Проверяет длину названия"""    
     @staticmethod
     def is_valid_title(title):
         count = len(title)
-        if not title:
-            return f'Пусто'
-        if count > 2:
-            return f'Название больше 2х символов'
-        return f'Название содержит не больше 2х символов'
+        return True if count > 2 else False
 
+        
+    """Проверяет диапазон года издания"""
     @staticmethod
     def is_valid_years(years):
         if years < 1000 or years > 2024:
-            return f'Дата выпуска книги не в диапазоне от 1000г до 2024г'
-        return f'Книга в нужном диапазоне'
+            return True
+        return False
 
+    """Возвращает заголовок с большой буквы"""
     @staticmethod
     def formal_title(title):
-        my_title = str(title)
+        my_title = title
         return my_title.title()
 
-
+    """Возвращает информацию о книге"""
     def get_info(self):
         return f'Название: {self.title}, Автор: {self.author}, Год: {self.years}, Кол-во страниц {self.pages}'
 
+    """Проверяет длину книги"""
     def is_long(self):
         return True if self.pages > 500 else False
 
 
 book1 = Book('коллекционер', 'Фаулз', 2017, 250)
 print(book1.get_info())
-print(book1.is_long())
+
 data = {
     'title' : 'Война и Мир',
     'author': 'Толстой',
@@ -82,5 +89,5 @@ print(Book.get_info(book3))
 print(Book.is_valid_title(book2.title))
 print(Book.is_valid_years(book1.years))
 print(Book.formal_title(book1.title))
-
+print(Book.is_long(book1))
 print(Book.get_total_books())
