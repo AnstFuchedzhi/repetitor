@@ -9,11 +9,11 @@ class Task:
     priority_emojis = {}       #словарь с эмодзи приоритетов (должен быть: {1: "🟢", 2: "🟡", 3: "🔴"})
     
 
-    def __init__(self, id, title, description, priopity, is_done, create_at, due_date = None, tags=[], history = []):
+    def __init__(self, id, title, description, priority, is_done, create_at, due_date = None, tags=[], history = []):
         self.id = id
         self.title = title
         self.description = description
-        self.priopity = priopity
+        self.priority = priority
         self.is_done = is_done
         self.create_at = datetime.now()
         self.due_date = due_date
@@ -32,11 +32,13 @@ class Task:
         return 'Выполнение задачи отменено'
 
     def get_priority_name(self, data):
-        return data[]
+        for item in data:
+            return item
 
 
     
 
-task1 = Task(1, 'Задача 1', 'Отправить письмо', '🟢', )
+task1 = Task(1, 'Задача 1', 'Отправить письмо',   )
+print(task1.get_priority_name())
 
 data = {1: "🟢", 2: "🟡", 3: "🔴"}

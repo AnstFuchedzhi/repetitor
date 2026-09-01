@@ -12,14 +12,16 @@ class Book:
         Book.total_books += 1
 
 
-    """Возвращает общее количество книг."""
+    
     @classmethod
-    def get_total_books(cls):  
+    def get_total_books(cls):
+        """Возвращает общее количество книг."""  
         return cls.total_books
 
-    """Собирает книгу из словаря."""
+    
     @classmethod
     def from_dict(cls, data):
+        """Собирает книгу из словаря."""
         return cls(
             title = data.get('title'),
             author = data.get('author'),
@@ -27,9 +29,10 @@ class Book:
             pages = data.get('pages')
         )
 
-    """Собирает книгу из строки"""
+    
     @classmethod
     def from_csv(cls, csv_string):
+        """Собирает книгу из строки"""
         if not csv_string:
             return f'Строка пустая'
         csv_file = StringIO(csv_string)
@@ -38,36 +41,39 @@ class Book:
         return cls (
             title = lst[0],
             author = lst[1],
-            years = lst[2],
-            pages = lst[3]
+            years = int(lst[2]),
+            pages = int(lst[3])
             )
 
-    """Проверяет длину названия"""    
+        
     @staticmethod
     def is_valid_title(title):
+        """Проверяет длину названия"""
         count = len(title)
         return True if count > 2 else False
 
         
-    """Проверяет диапазон года издания"""
+    
     @staticmethod
     def is_valid_years(years):
-        if years < 1000 or years > 2024:
-            return True
-        return False
+        """Проверяет диапазон года издания"""
+        if int(years) < 1000 or int(years) > 2024:
+            return False
+        return True
 
-    """Возвращает заголовок с большой буквы"""
+    
     @staticmethod
     def formal_title(title):
-        my_title = title
-        return my_title.title()
+        """Возвращает заголовок с большой буквы"""
+        return title.title()
 
-    """Возвращает информацию о книге"""
     def get_info(self):
+        """Возвращает информацию о книге"""
         return f'Название: {self.title}, Автор: {self.author}, Год: {self.years}, Кол-во страниц {self.pages}'
 
-    """Проверяет длину книги"""
+    
     def is_long(self):
+        """Проверяет длину книги"""
         return True if self.pages > 500 else False
 
 
