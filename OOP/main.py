@@ -36,7 +36,7 @@ class Product:
         if value < 0:
             raise ValueError('Ошибка Валидации')
         self.__stock = value
-        print(f'Кол-во товара {self.name} на складе успешно заменено на {value}')
+        return f'Кол-во товара {self.name} на складе успешно заменено на {value}'
         
 
     @property
@@ -170,8 +170,9 @@ class Cart: #😎😎😎
             product.reduce_stock(quantity)
             self.__items.append({'product': product, 'quantity': quantity })
             self.__update_total()
-            return f'Товар {product.name} добавлен в корзину. Сумма товаров в корзине: {self.__total}'
-        return f'Недостаточное количество товара {product.name}'
+            print(f'Товар {product.name} добавлен в корзину. Сумма товаров в корзине: {self.__total}')
+            return
+        print(f'Недостаточное количество товара {product.name}')
 
     def remove_items(self, product_name):
         for item in self.__items:
@@ -237,28 +238,81 @@ class Cart: #😎😎😎
         return '\n'.join(lines)
 
 
+class Castomer:
+    def __init__(self, name, email, adress):
+        self.name = name
+        self.email = email
+        self.__adress = adress
+        self.__cart = Cart()
+        self.__orders = []
+        self.__reviews = []
+        self.__date = datetime.now()
 
-cart = Cart()
+    @property
+    def adress(self):
+        return self.__adress
+
+    @adress.setter
+    def adress(self, value):
+        if not isinstance(value, str):
+            raise ValueError('Ошибка валидации')
+        self.__adress = value
+        return f'Адрес изменен на {value}'
+
+    @property
+    def cart(self):
+        return self.__cart
+
+    @property
+    def orders(self):
+        return self.__orders.copy()
+
+    @property
+    def rewiews(self):
+        return self.__reviews.copy()
+    
+        
+    def add_to_cart(self, product, count = 1):
+        return self.__cart.add_items(product, count)
+
+    def remove_from_cart(self, name):
+        return self.__cart.remove_items(name)
+
+
+    def show_cart(self):
+        return str(self.__cart)
+
+    def check_out(self):
+        if len(self.__cart) == 0:
+            return f'Корзина пуста'
+        order = делать композицию!!!!!
+
+        
+    
 elecrtonic = Category('Электроника', 'Все виды электроники')
 laptop = Product('Ноутбук', 63000, 10, elecrtonic)
-phone = Product('Телефон', 55000, 12, elecrtonic )
-microwave = Product('Микроволновка', 7000, 13, elecrtonic)
+
+person = Castomer('G', '@sdf.r', 'Wertyu')
+person.add_to_cart(laptop, 2)
 
 
-print(laptop==phone)
-print(microwave < laptop)
-print(microwave > laptop)
+print(person.show_cart())
 
-print(elecrtonic)
 
-elecrtonic.add_product(laptop)
-elecrtonic.add_product(phone)
-elecrtonic.add_product(microwave)
+# cart = Cart()
+# elecrtonic = Category('Электроника', 'Все виды электроники')
+# laptop = Product('Ноутбук', 63000, 10, elecrtonic)
+# phone = Product('Телефон', 55000, 12, elecrtonic )
+# microwave = Product('Микроволновка', 7000, 13, elecrtonic)
 
-print(cart.add_items(laptop, 2))
-print(cart.get_items())
-print(elecrtonic)
-print(len(cart))
-print(cart[0])
-print('Ноутбук' in cart)
-print(cart)
+# elecrtonic.add_product(laptop)
+# elecrtonic.add_product(phone)
+# elecrtonic.add_product(microwave)
+
+# print(cart.add_items(laptop, 2))
+# print(cart.get_items())
+# print(elecrtonic)
+# print(len(cart))
+# print(cart[0])
+# print('Ноутбук' in cart)
+# print(cart)
