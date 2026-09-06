@@ -1,8 +1,8 @@
 import datetime
 import csv
 from io import StringIO
-from datetime import time
 from datetime import timedelta
+
 
 class Task:
 
@@ -13,7 +13,7 @@ class Task:
     priority_emojis = {1: "🟢", 2: "🟡", 3: "🔴"}  
     
 
-    def __init__(self, id, title, description, priority, is_done=False, due_date = None, tag=[], history = []):
+    def __init__(self, id, title, description, priority, is_done=False, due_date = None, tag=[]):
         self.id = id
         self.title = title
         self.description = description
@@ -25,6 +25,15 @@ class Task:
         self.__history = []
         Task.total_tasks += 1
         
+
+        if due_date is not None:
+            if not isinstance(due_date, datetime.datetime):
+                raise ValueError('Ошибка валидации даты')
+            if due_date < datetime.datetime.now():
+                raise ValueError('Дата не может быть в прошлом')
+        due_date = datetime.datetime.now() + timedelta(days=2)
+        self.due_date = due_date
+
 
     
     def mark_done(self):
@@ -51,9 +60,10 @@ class Task:
             return f'Внесите тег, строка пустая' 
         if tag in self.tag:
             return f'Тег {tag} уже есть'
-        else:
-            self.tag.append(tag)
-            return f'Тег {tag} добавлен'
+        if isinstance(self.tag, list):
+            self.tag = [self.tag]
+        self.tag.append(tag)
+        return f'Тег {tag} добавлен'
 
 
     def remove_tag(self, tag):
@@ -73,13 +83,12 @@ class Task:
     def days_until_due(self):
         if not self.due_date:
             return None
-        count_days = datetime.datetime.now() - self.due_date
+        count_days = (self.due_date - datetime.datetime.now()).days
         return count_days
 
 
     def get_history(self):
-        self.__history.append(self.description)
-        return self.__history
+        return self.__history.copy()
 
 
     def get_info(self):
@@ -121,7 +130,7 @@ class Task:
             description = data.get('description'),
             priority = int(data.get('priority')),
             due_date = due_date,
-            tag = tag                    
+            tag = tag if tag is not None else []                   
         )
         
     @classmethod
@@ -136,16 +145,84 @@ class Task:
             title = lst[1],
             description = lst[2],
             priority = int(lst[3]),
-            due_date = lst[4], #эти два не работают, в интернете написано нужно как то их преобразовать, но я не понимаю как и для чего, и откуда сюда достается due_date tegs
+            due_date = int(lst[4]), #эти два не работают, в интернете написано нужно как то их преобразовать, но я не понимаю как и для чего, и откуда сюда достается due_date tegs
             tag = lst[5]
         ) 
 
+    @staticmethod
+    def is_valid_title(title): #проверяет, что название не пустое и длиннее 3 символов
+        if not title:
+            return f'Строка пустая'
+        count = len(title)
+        if count > 3:
+            return True
+        return False
+        
+
+    @staticmethod
+    def is_valid_priority(priority): #проверяет, что приоритет от 1 до 3
+        if priority > 0 or priority < 4:
+            return True
+        return False
+
+
+    @staticmethod
+    def is_valid_description(description): #проверяет, что описание не пустое
+        if not description:
+            return f'Описание пустое'
+        return f'Описание валидное'
+
+
+    @staticmethod
+    def format_title(title): #возвращает название с заглавной буквы 
+        return title.title()  
+
+    @staticmethod
+    def format_description(description): #обрезает описание до 100 символов (если длиннее, добавляет "...")
+        if len(description) > 100:
+            return description[:100] + '...'
+        return description
+
+
+    @staticmethod
+    def get_priority_color(priority):  #возвращает цвет для приоритета: "red", "orange", "green"
+        priority_color =  {
+            1: "🟢",
+            2: "🟡", 
+            3: "🔴"
+        }
+        return priority_color.get(priority)
+
+    @staticmethod
+    def merge_tags(tags_list):
+        merge_set = set()
+        for tags in tags_list:
+            if isinstance(tags, str):
+                tags = tags.split(',')
+                merge_set.update(tags)
+        return list(merge_set)
+    
+
+
+    @staticmethod
+    def validate_tag(tag): #проверяет, что тег состоит только из букв и цифр и длиннее 2 символов
+        for item in tag:
+            if not isinstance(item, str):
+                return False
+            if len(item) < 3:
+                return False
+            if not item.isalnum():
+                return False
+        return True
 
 
 
 
-task1 = Task(1111, 'Задача 1', 'Отправить письмо', 1, False,  datetime.datetime.now() - timedelta(days=2))
-task2 = Task(2222, 'Задача 2', 'Сходить в магазин', 2, True)
+
+
+
+task1 = Task(1111, 'Задача 1', 'Отправить письмо', 1, False, datetime.datetime.now() + timedelta(days=2))
+task2 = Task(2222, 'Задача 2','Сходить в магазин', 2, True)
 csv_str = '4444, Задача 4, Полить цветы, 1, timedelta(hours=12), домашние дела'
 print(task1.get_priority_name())
 print(task1.get_priority_emoji())
@@ -168,10 +245,18 @@ data = {
     'description' : 'Погулять с собакой',
     'priority' : 3,
     'due_date' : timedelta(hours=8),
-    'tag' : 'домашние дела'
+    'tag' : 'собачьи дела'
 }
 
 task3 = Task.from_dict(data)
 print(task3.get_info())
 task4 = Task.from_csv(csv_str)
 print(task4)
+
+print(Task.is_valid_title(task1.title))
+print(Task.is_valid_priority(task1.priority))
+print(Task.is_valid_description(task2.description))
+print(Task.format_description(task1.description))
+print(Task.get_priority_color(task3.priority))
+print(Task.merge_tags([task1.tag, task2.tag, task3.tag]))
+print(Task.validate_tag(task2.tag))

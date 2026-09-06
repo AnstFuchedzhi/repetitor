@@ -197,7 +197,7 @@ class Cart: #😎😎😎
 
     def get_total(self):
         total = float(self.__total)
-        return f'Общая сумма товаров корзины: {total}'
+        return total
 
     def get_items(self):
         copy_lst = copy.deepcopy(self.__items)
@@ -238,7 +238,7 @@ class Cart: #😎😎😎
         return '\n'.join(lines)
 
 
-class Castomer:
+class Castomer: #💛💛💛💛
     def __init__(self, name, email, adress):
         self.name = name
         self.email = email
@@ -282,21 +282,96 @@ class Castomer:
     def show_cart(self):
         return str(self.__cart)
 
-    def check_out(self):
+    def check_out(self):  #проверяет пустая ли корзина, если не пустая, оплачивает товар, меняет статус на опалченный, создает новую корзину(обновляет корзину)
         if len(self.__cart) == 0:
             return f'Корзина пуста'
-        order = делать композицию!!!!!
+        order = Order(self.__cart, self.name, self.__adress)
+        order.place()
+        self.__orders.append(order)
+        self.__cart = Cart()
+        return f'Заказ оформлен, сумма заказа {order.total}, Статус заказа {order.status}'
+
+
+
+class Order: #✅✅✅✅
+    statuses = ['Новый', 'Оплачен', 'Отправлен', 'Доставлен', 'Отменён']
+
+    def __init__(self, cart, customer_name, address):
+        self.__items = cart.get_items()
+        self.__total = cart.get_total()
+        self.__status = 'Новый'
+        self.__created_ad = datetime.now()
+        self.__customer_name = customer_name
+        self.__adress = address
+        self.__tracking_number = None
+
+    @property
+    def total(self):
+        return self.__total
+
+    @property
+    def status(self):
+        return self.__status
+
+    @property
+    def items(self):
+        return self.__items.copy()
+
+    @property
+    def tracking_number(self):
+        return self.__tracking_number
+
+    
+    def place(self):
+        if self.__status == 'Отменен':
+            return 'Отмененный заказ нельзя оплатить'
+        if self.__status == 'Оплачен':
+            return 'Заказ оплачен'
+        self.__status = 'Оплачен'
+        return 'Оплачен'
+    
+    def ship(self, tracking_number=None):
+        if self.__status != 'Оплачен':
+            return 'Нельзя отправить не оплаченный заказ'
+        self.__status = 'Отправлен'
+        if tracking_number is None:
+            self.__tracking_number = f'TRACK-{datetime.now().strftime("%Y%m%d%H%M%S")}'
+        else:
+            self.__tracking_number = tracking_number
+        return f'Заказ отправлен. Трек номер - {self.__tracking_number}'
+
+
+    def deliver(self):
+        if self.__status != 'Отправлен':
+            return 'Нельзя доставить неотправленный заказ'
+        self.__status = 'Доставлен'
+        return 'Заказ доставлен'
+
+    def cancel(self):
+        if self.__status == 'Доставлен':
+            return 'Нельзя отменить доставленный заказ'
+        if self.__status == 'Отменен':
+            return 'Заказ отменен'
+        self.__status = 'Отменен'
+        return 'Заказ отменен'
+
+    
+    
+
 
         
     
 elecrtonic = Category('Электроника', 'Все виды электроники')
 laptop = Product('Ноутбук', 63000, 10, elecrtonic)
+phone = Product('Телефон', 55000, 12, elecrtonic )
 
 person = Castomer('G', '@sdf.r', 'Wertyu')
 person.add_to_cart(laptop, 2)
+print(person.check_out())
 
-
-print(person.show_cart())
+person2 = Castomer('TTT', '@.mail', 'adress')
+person.add_to_cart(phone, 3)
+print(person.check_out())
 
 
 # cart = Cart()
