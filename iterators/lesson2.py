@@ -18,4 +18,3 @@ iterator = SquaresIterator(10)
 for i in iterator:
     print(i)
 
-# при удалении StopIteration числа уходят в бесконечность. Или так и должно быть?🤓
