@@ -1,17 +1,28 @@
 
 def count_calls(func):
-    def inner(*args, **kwargs):
-        inner.count += 1
+    count = 0
+
+    def counter_inner(*args, **kwargs):
+        nonlocal count
+        count += 1
         return func(*args, **kwargs)
-    inner.count = 0
-    return inner
+    def get_count():
+        return count
+    counter_inner.get_count = get_count
+    return counter_inner
+
 
 @count_calls
-def some_func():
-    return f'Вызов функции'
+def greeting(n):
+    return f'hello {n}'
 
-some_func()
-some_func()
-some_func()
 
-print(some_func.count)
+
+print(greeting('S'))
+print(greeting('S'))
+print(greeting('S'))
+print(greeting('S'))
+print(greeting('S'))
+print(greeting.get_count())
+
+
