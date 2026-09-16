@@ -1,9 +1,9 @@
 def uppercase_result(func):
-    def wrapper(word):
-        if isinstance(word, str):
-            result = word.upper()
-            return func(result)
-        return None
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        if isinstance(result, str):
+            return result.upper()
+        return result
     return wrapper
 
 @uppercase_result
@@ -12,7 +12,7 @@ def get_greeting(word):
 
 print(get_greeting('Анна'))
 
-#я не знаю как перевести в верхний регистр еще и слово привет(
+
 
 
 
