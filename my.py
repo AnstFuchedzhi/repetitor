@@ -1,37 +1,15 @@
-class Animal:
+def average_score(students, student_name):
+    marks_student = students.get(student_name)
+    count = len(marks_student)
+    midle = sum(marks_student)/count
+    round_midle = round(midle, 2)
+    return round_midle
 
-    def __init__(self, age, name):
-        self.age = age
-        self.name = name
+        
+   
 
-    def get_info(self):
-        return f' {self.age}, {self.name}'
+students = {'Ivan': [41, 52, 74], 'Olga': [88, 90, 91]}
+student_name = 'Ivan'
 
-    def eat(self):
-        return f'Животное {self.name} ест'
+print(average_score(students, student_name))
 
-    def sleep(self):
-        return f'Животное {self.name} спит'
-
-
-class Dog(Animal):
-
-    def __init__(self, age, name, breed):
-        super().__init__(age, name)
-        self.breed = breed
-
-    def sound(self):
-        return f'Животное {self.name} издает звук гав'
-
-    def get_info(self):
-            return f' {self.age} {self.name} {self.breed}'
-
-
-class Cat(Animal):
-    def sound(self):
-        return f'Животное {self.name} издает звук мяу'
-
-
-dog = Dog(3, 'H', 'pekines')
-print(dog.get_info())
-    

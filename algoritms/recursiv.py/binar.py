@@ -2,9 +2,9 @@
 def binary_search_last(massiv, number):
     left = 0
     right = len(massiv) - 1
-    result = -1
+    result = - 1
     while left <= right:
-        mid = (left + right)// 2
+        mid = (left + right)//2
         if number == massiv[mid]:
             result = mid
             left = mid + 1
@@ -13,6 +13,7 @@ def binary_search_last(massiv, number):
         else:
             right = mid - 1
     return result
+
         
         
 
