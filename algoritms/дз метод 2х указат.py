@@ -2,7 +2,7 @@ def two_diff(arr, target):
     left = 0
     right = 1
 
-    while left < right:
+    while right < len(arr):
         current_diff = arr[right] - arr[left]
         if current_diff == target:
             return (arr[right], arr[left])
@@ -13,7 +13,7 @@ def two_diff(arr, target):
 
     return None
 
-arr = [0, 3, 4, 6, 8, 10, 13]
-print(two_diff(arr, 5))
+arr = [0, 2 , 4, 6, 7, 14]
+print(two_diff(arr, 3))
 
         
