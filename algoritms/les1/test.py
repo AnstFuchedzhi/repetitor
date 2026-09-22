@@ -2,7 +2,6 @@ massiv = [1, 2, 3, 5, 8, 9, 12, 15, 20]
 def elemen(massiv, number):
     left = 0
     right = len(massiv) - 1
-    result = -1
     while left<=right:
         mid = (left + right)// 2
         if number == massiv[mid]:
