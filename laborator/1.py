@@ -1,9 +1,12 @@
-day = int(input('Введите день: '))
-hour = 0
-while hour < 24:
-    if hour % 6 == 0:
-        print(f'Д{day} Ч{hour}')
-        hour += 6
+word = input('Введите слово: ')
+revers_word = ''
+for symbol in word:
+    revers_word = symbol + revers_word
+if word == revers_word:
+    print('Это палиндром')
+else:
+    print('Нет')        
+    
 
     
 
